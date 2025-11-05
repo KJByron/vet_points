@@ -1,0 +1,25 @@
+Package: VetPoints
+Type: Package
+Title: Get Vet points and determine place requirement for world team
+Version: 0.1
+Authors@R: person("Karen", "Byron",
+           email = "karen.byron@bd.com", 
+           role = c("cre", "aut")),
+Description: This package scrapes the points from usafencing.org and does various calculations.
+Depends:
+    R (>= 4.1)
+License: file LICENSE
+Language: en-US    
+Imports:
+    dplyr, 
+    rvest
+Suggests:
+    testthat,
+    usethis
+VignetteBuilder: 
+    knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Encoding: UTF-8
+Config/testthat/edition: 3
+LazyData: true
