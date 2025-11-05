@@ -1,9 +1,16 @@
+library(rvest)
+
 ## start from main point standing page
 url <- "https://www.usafencing.org/point-standings"
 site_main <- rvest::read_html(url)
 
 
 site_narrow <- rvest::read_html("https://usfencingresults.org/rankings/")
+# not sure where url came from for site_narrow
+# or how to navigate from site_main to needed part
+site_main |> html_elements("main") |> html_elements("li") |> html_elements("a")
+(site_main |> html_elements("main") |> html_elements("li") |> html_elements("a"))[6]
+
 if (FALSE) {  # see structure overview, no values
   xml2::html_structure(site_main)
   xml2::html_structure(site_narrow) 
