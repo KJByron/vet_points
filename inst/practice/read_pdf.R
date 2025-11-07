@@ -1,7 +1,10 @@
+## general output non-homogenous, restrict to vets
+# x_page <- "https://usfencingresults.org/rankings/Women%27s%20Epee/WE%20Sr%20R%202025%2010%2006.pdf"
 
 # x_doc <- "WE V50 R 2025 07 10.pdf"
 x_page <- "https://usfencingresults.org/rankings/Women%27s%20Epee/WE%20V50%20R%202025%2007%2010.pdf"
-x_page <- "https://usfencingresults.org/rankings/Women%27s%20Epee/WE%20Sr%20R%202025%2010%2006.pdf"
+# use men to get multiple pages
+x_page <- "https://usfencingresults.org/rankings/Men%27s%20Epee%20/ME%20V50%20R%202025%2007%2010.pdf"
 pdf_raw <- pdftools::pdf_text(pdf = x_page)
 
 # left pages have 'RANK' as initial column name, right do not
@@ -17,7 +20,7 @@ row_list <- purrr::map(
         # i_row <- 12; i_row <- 28
         
         # drop blanks
-        x_list <- x_list[lengths(x_list) != 0]
+        x_page <- x_page[length(x_page) != 0]
 
         ## split spaces
         # multiple spaces between characters
@@ -48,6 +51,26 @@ row_length_list <- purrr::map(
     sapply(x_row, length)
   }
 ) 
-sapply(row_length_list, median)
+row_median <- sapply(row_length_list, median)
 
-# pdf_row <- 
+body_list <- purrr::map(
+  seq_along(row_median),
+  function(i_row) {
+    # i_row <- 1
+    n_col <- row_median[i_row]
+    x <- row_list[[i_row]]
+    x <- x[sapply(x, length) == n_col]
+    out <- matrix(unlist(x), nrow = length(x), ncol = n_col, byrow = !FALSE)
+    out_head <- out[1, , drop = TRUE]
+    out <- out[-1, , drop = FALSE]
+    out <- as.data.frame(out)
+    names(out) <- out_head
+    out
+  }
+)
+
+body_df_list <- purrr::map(
+  split(body_list, sapply(body_list, ncol)),
+  dplyr::bind_rows
+)
+
